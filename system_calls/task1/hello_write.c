@@ -7,15 +7,9 @@ int main(int argc, char** argv)
 	
 	ret = write(1, "Hello, World!\n", 15);
 	
-	if (ret == -1)
+	if (ret < 0)
 	{
 		perror("Error");
-		return -1;
-	}
-
-	if (ret != 15)
-	{
-		fprintf(stderr, "Buffer is not fully written\n");
 		return -1;
 	}
 
