@@ -1,17 +1,14 @@
-#include <stdio.h>	// perror, fprintf
-#include <unistd.h> // write
+#include <unistd.h>
 
 int main(int argc, char** argv)
 {
 	ssize_t ret;
+	char buf[] = "Hello, World!\n";
 	
-	ret = write(1, "Hello, World!\n", 15);
+	ret = write(STDOUT_FILENO, buf, sizeof(buf));
 	
-	if (ret < 0)
-	{
-		perror("Error");
+	if (ret != sizeof(buf))
 		return -1;
-	}
 
 	return 0;
 }

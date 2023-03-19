@@ -1,19 +1,17 @@
-#define _GNU_SOURCE
-#include <stdio.h>			// perror
-#include <sys/syscall.h>	// SYS_write
-#include <unistd.h>			// syscall
+#include <sys/syscall.h>
+#include <unistd.h>
 
 ssize_t my_write(unsigned int fd, const char* buf, size_t len);
 
 int main(int argc, char** argv)
 {
-	ssize_t ret = my_write(1347, "Hello, World!\n", 15);
+	ssize_t ret;
+	char buf[] = "Hello, World!\n";
+
+	ret = my_write(STDOUT_FILENO, buf, sizeof(buf));
 	
-	if (ret < 0)
-	{
-		perror("Error");
+	if (ret != sizeof(buf))
 		return -1;
-	}
 
 	return 0;
 }
