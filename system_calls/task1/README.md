@@ -25,5 +25,5 @@ user@host:~$ strace ./hello_syscall
 + Запустите под `strace` команду `wget kernel.org` (если нет `wget`, используйте `curl`). Получите статистику использования системных вызовов, порожденных процессом:
 
 ```bash
-user@host:~$ strace -f -c wget kernel.org
+user@host:~$ strace -c wget kernel.org
 ```
