@@ -12,8 +12,7 @@ int main(int argc, char **argv) {
     ssize_t written = 0;
     ssize_t len = sizeof(buf);
 
-    while (written < len)
-    {
+    while (written < len) {
         ret = write(STDOUT_FILENO, buf + written, len - written);
 
         if (ret == ERROR) {
