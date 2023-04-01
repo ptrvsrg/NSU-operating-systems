@@ -4,8 +4,9 @@
 #include <string.h>
 #include <unistd.h>
 
-int main(int argc, char **argv)
-{
+#define ERROR (-1)
+
+int main(int argc, char **argv) {
     char buf[] = "Hello, World!\n";
     ssize_t ret;
     ssize_t written = 0;
@@ -15,8 +16,7 @@ int main(int argc, char **argv)
     {
         ret = write(STDOUT_FILENO, buf + written, len - written);
 
-        if (ret == -1)
-        {
+        if (ret == ERROR) {
             fprintf(stderr, "Error: %s\n", strerror(errno));
             return EXIT_FAILURE;
         }
