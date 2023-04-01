@@ -5,6 +5,8 @@
 #include <sys/syscall.h>
 #include <unistd.h>
 
+#define ERROR (-1)
+
 ssize_t my_write(unsigned int fd, const char *buf, size_t len);
 
 int main(int argc, char **argv)
@@ -18,8 +20,7 @@ int main(int argc, char **argv)
     {
         ret = my_write(STDOUT_FILENO, buf + written, len - written);
 
-        if (ret == -1)
-        {
+        if (ret == ERROR) {
             fprintf(stderr, "Error: %s\n", strerror(errno));
             return EXIT_FAILURE;
         }
