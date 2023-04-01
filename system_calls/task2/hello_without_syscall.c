@@ -28,7 +28,7 @@ int main(int argc, char** argv)
         written += ret;
     }
 
-	return 0;
+    return EXIT_SUCCESS;
 }
 
 ssize_t my_write(int fd, const void *buf, size_t size)
