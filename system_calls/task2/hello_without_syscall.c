@@ -48,5 +48,10 @@ ssize_t my_write(int fd, const void *buf, size_t size)
 	    : "memory"						// clobbers
 	);
 
+    if (ret < 0) {
+        errno = -ret;
+        ret = ERROR;
+    }
+
     return ret;
 }
