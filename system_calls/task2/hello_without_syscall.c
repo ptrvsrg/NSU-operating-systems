@@ -18,7 +18,7 @@ int main(int argc, char** argv)
 	
 	while (written < len)
     {
-        ret = my_write(54, buf + written, len - written);
+        ret = my_write(STDOUT_FILENO, buf + written, len - written);
 
         if (ret == ERROR) {
             fprintf(stderr, "Error: %s\n", strerror(errno));
