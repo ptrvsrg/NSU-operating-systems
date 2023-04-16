@@ -110,7 +110,7 @@ int create_reverse_dir(const char *dir_path, const char *reverse_dir_path) {
         return ERROR;
     }
 
-    ret = mkdir(reverse_dir_path, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    ret = mkdir(reverse_dir_path, S_IRWXU | S_IRGRP | S_IWGRP | S_IROTH | S_IXOTH);
     if (ret == ERROR) {
         perror(reverse_dir_path);
         return ERROR;
