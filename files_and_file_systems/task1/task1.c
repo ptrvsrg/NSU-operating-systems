@@ -19,7 +19,6 @@ int process_dir_entry(const struct dirent *dir_entry, const char *dest_working_d
 long get_file_size(FILE *file_stream);
 int read_file(char *buffer, size_t size, FILE *in_stream);
 int write_file(const char *buffer, size_t size, FILE *in_stream);
-int close_file_streams(FILE *dest_stream, FILE *src_stream);
 int create_reverse_file(const char *file_path, const char *reverse_file_path);
 
 int main(int argc, char **argv) {
@@ -210,14 +209,6 @@ int write_file(const char *buffer, size_t size, FILE *in_stream) {
     return SUCCESS;
 }
 
-int close_file_streams(FILE *dest_stream, FILE *src_stream) {
-    if (dest_stream != NULL)
-        fclose(dest_stream);
-
-    if (src_stream != NULL)
-        fclose(src_stream);
-}
-
 int create_reverse_file(const char *file_path, const char *reverse_file_path) {
     int ret = SUCCESS;
     size_t reversed = 0;
@@ -242,7 +233,8 @@ int create_reverse_file(const char *file_path, const char *reverse_file_path) {
     file_size = get_file_size(src_stream);
     if (file_size == ERROR) {
         perror(file_path);
-        close_file_streams(dest_stream, src_stream);
+        fclose(dest_file_stream);
+        fclose(src_file_stream);
         return ERROR;
     }
 
@@ -250,20 +242,17 @@ int create_reverse_file(const char *file_path, const char *reverse_file_path) {
         long offset = max(0, file_size - reversed - BUFFER_MAX);
         size_t count = file_size - offset - reversed;
 
-        ret = fseek(src_stream, offset, SEEK_SET);
+        ret = fseek(src_file_stream, offset, SEEK_SET);
         if (ret == ERROR) {
             perror(file_path);
-            close_file_streams(dest_stream, src_stream);
-            return ERROR;
+            break;
         }
 
         memset(buffer, 0, BUFFER_MAX);
-
-        ret = read_file(buffer, count, src_stream);
+        ret = read_file(buffer, count, src_file_stream);
         if (ret == ERROR) {
             perror(file_path);
-            close_file_streams(dest_stream, src_stream);
-            return ERROR;
+            break;
         }
 
         reverse_string(buffer, buffer, BUFFER_MAX);
@@ -271,14 +260,13 @@ int create_reverse_file(const char *file_path, const char *reverse_file_path) {
         ret = write_file(buffer, count, dest_stream);
         if (ret == ERROR) {
             perror(reverse_file_path);
-            close_file_streams(dest_stream, src_stream);
-            return ERROR;
+            break;
         }
 
         reversed += count;
     }
 
-    close_file_streams(dest_stream, src_stream);
-
-    return SUCCESS;
+    fclose(dest_file_stream);
+    fclose(src_file_stream);
+    return ret;
 }
