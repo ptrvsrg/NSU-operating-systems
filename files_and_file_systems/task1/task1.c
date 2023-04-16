@@ -16,7 +16,7 @@ void join_file_path(const char *working_dir, const char *file_name, char *file_p
 int process_command_line_args(int argc, char **argv);
 int create_reverse_dir(const char *dir_path, const char *reverse_dir_path);
 int process_dir_entry(const struct dirent *dir_entry, const char *dest_working_dir, const char *src_working_dir);
-long get_file_size(FILE *file);
+long get_file_size(FILE *file_stream);
 int read_file(char *buffer, size_t size, FILE *in_stream);
 int write_file(const char *buffer, size_t size, FILE *in_stream);
 int close_file_streams(FILE *dest_stream, FILE *src_stream);
@@ -148,24 +148,24 @@ int process_dir_entry(const struct dirent *dir_entry, const char *dest_working_d
     return ret;
 }
 
-long get_file_size(FILE *file) {
+long get_file_size(FILE *file_stream) {
     int ret = SUCCESS;
     long begin_pos = 0;
     long size = 0;
 
-    begin_pos = ftell(file);
+    begin_pos = ftell(file_stream);
     if (begin_pos == ERROR)
         return ERROR;
 
-    ret = fseek(file, 0, SEEK_END);
+    ret = fseek(file_stream, 0, SEEK_END);
     if (ret == ERROR)
         return ERROR;
 
-    size = ftell(file);
+    size = ftell(file_stream);
     if (size == ERROR)
         return ERROR;
 
-    ret = fseek(file, begin_pos, SEEK_SET);
+    ret = fseek(file_stream, begin_pos, SEEK_SET);
     if (ret == ERROR)
         return ERROR;
 
