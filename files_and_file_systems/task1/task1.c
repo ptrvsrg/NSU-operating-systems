@@ -23,7 +23,14 @@ int close_file_streams(FILE *dest_stream, FILE *src_stream);
 int create_reverse_file(const char *file_path, const char *reverse_file_path);
 
 int main(int argc, char **argv) {
-    int ret = process_command_line_args(argc, argv);
+    int ret = SUCCESS;
+
+    if (argc < 2) {
+        print_usage(argv[0]);
+        return EXIT_FAILURE;
+    }
+
+    ret = process_command_line_args(argc, argv);
     if (ret == ERROR)
         return EXIT_FAILURE;
 
@@ -78,11 +85,6 @@ int process_command_line_args(int argc, char **argv) {
     char dir_name[NAME_MAX + 1] = {};
     char reverse_dir_name[NAME_MAX + 1] = {};
     char reverse_dir_path[PATH_MAX + 1] = {};
-
-    if (argc < 2) {
-        print_usage(argv[0]);
-        return ERROR;
-    }
 
     for (int i = 1; i < argc; ++i) {
         split_file_path(argv[i], working_dir, dir_name);
