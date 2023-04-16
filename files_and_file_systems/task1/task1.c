@@ -8,7 +8,7 @@
 #define ERROR (-1)
 #define BUFFER_MAX 256
 
-long max(long x, long y);
+long max(long a, long b);
 void print_usage(const char *program_name);
 void reverse_string(char *dest, const char *src, int dest_length);
 void split_file_path(const char *file_path, char *working_dir, char *file_name);
@@ -30,8 +30,8 @@ int main(int argc, char **argv) {
     return EXIT_SUCCESS;
 }
 
-long max(long x, long y) {
-    return (x <= y) ? y : x;
+long max(long a, long b) {
+    return (a <= b) ? b : a;
 }
 
 void print_usage(const char *program_name) {
