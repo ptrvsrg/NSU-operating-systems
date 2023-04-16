@@ -214,23 +214,23 @@ int create_reverse_file(const char *file_path, const char *reverse_file_path) {
     size_t reversed = 0;
     size_t file_size = 0;
     char buffer[BUFFER_MAX + 1] = {};
-    FILE *src_stream = NULL;
-    FILE *dest_stream = NULL;
+    FILE *src_file_stream = NULL;
+    FILE *dest_file_stream = NULL;
 
-    src_stream = fopen(file_path, "r");
-    if (src_stream == NULL) {
+    src_file_stream = fopen(file_path, "r");
+    if (src_file_stream == NULL) {
         perror(file_path);
         return ERROR;
     }
 
-    dest_stream = fopen(reverse_file_path, "w");
-    if (dest_stream == NULL) {
+    dest_file_stream = fopen(reverse_file_path, "w");
+    if (dest_file_stream == NULL) {
         perror(reverse_file_path);
-        fclose(src_stream);
+        fclose(src_file_stream);
         return ERROR;
     }
 
-    file_size = get_file_size(src_stream);
+    file_size = get_file_size(src_file_stream);
     if (file_size == ERROR) {
         perror(file_path);
         fclose(dest_file_stream);
@@ -256,8 +256,7 @@ int create_reverse_file(const char *file_path, const char *reverse_file_path) {
         }
 
         reverse_string(buffer, buffer, BUFFER_MAX);
-
-        ret = write_file(buffer, count, dest_stream);
+        ret = write_file(buffer, count, dest_file_stream);
         if (ret == ERROR) {
             perror(reverse_file_path);
             break;
