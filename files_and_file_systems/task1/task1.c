@@ -11,7 +11,7 @@
 long max(long a, long b);
 void print_usage(const char *program_name);
 void reverse_string(char *dest, const char *src, int dest_length);
-void split_file_path(const char *file_path, char *working_dir, char *file_name);
+void get_file_name(const char *file_path, char *file_name);
 void join_file_path(const char *working_dir, const char *file_name, char *file_path);
 int process_command_line_args(int argc, char **argv);
 int create_reverse_dir(const char *dir_path, const char *reverse_dir_path);
@@ -62,16 +62,13 @@ void reverse_string(char *dest, const char *src, int dest_length) {
     }
 }
 
-void split_file_path(const char *file_path, char *working_dir, char *file_name) {
+void get_file_name(const char *file_path, char *file_name) {
     char *last_slash = strrchr(file_path, '/');
 
-    if (last_slash == NULL) {
-        strncpy(working_dir, ".", PATH_MAX);
+    if (last_slash == NULL)
         strncpy(file_name, file_path, NAME_MAX);
-    } else {
-        strncpy(working_dir, file_path, last_slash - file_path);
+    else
         strncpy(file_name, last_slash + 1, NAME_MAX);
-    }
 }
 
 void join_file_path(const char *working_dir, const char *file_name, char *file_path) {
@@ -80,16 +77,14 @@ void join_file_path(const char *working_dir, const char *file_name, char *file_p
 
 int process_command_line_args(int argc, char **argv) {
     int ret = SUCCESS;
-    char working_dir[PATH_MAX + 1] = {};
     char dir_name[NAME_MAX + 1] = {};
     char reverse_dir_name[NAME_MAX + 1] = {};
     char reverse_dir_path[PATH_MAX + 1] = {};
 
     for (int i = 1; i < argc; ++i) {
-        split_file_path(argv[i], working_dir, dir_name);
-
+        get_file_name(argv[i], dir_name);
         reverse_string(reverse_dir_name, dir_name, NAME_MAX);
-        join_file_path(working_dir, reverse_dir_name, reverse_dir_path);
+        join_file_path(".", reverse_dir_name, reverse_dir_path);
 
         ret = create_reverse_dir(argv[i], reverse_dir_path);
         if (ret == ERROR)
