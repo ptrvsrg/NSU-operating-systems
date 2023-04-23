@@ -51,7 +51,7 @@ void reverse_string(char *dest, const char *src, int dest_length) {
 
     strncpy(dest, src, dest_length);
     begin = dest;
-    end = dest + strlen(dest) - 1;
+    end = dest + dest_length - 1;
 
     while (end > begin) {
         temp = *end;
@@ -83,7 +83,7 @@ int process_command_line_args(int argc, char **argv) {
 
     for (int i = 1; i < argc; ++i) {
         get_file_name(argv[i], dir_name);
-        reverse_string(reverse_dir_name, dir_name, NAME_MAX);
+        reverse_string(reverse_dir_name, dir_name, strlen(dir_name));
         join_file_path(".", reverse_dir_name, reverse_dir_path);
 
         ret = create_reverse_dir(argv[i], reverse_dir_path);
@@ -133,7 +133,7 @@ int process_dir_entry(const struct dirent *dir_entry, const char *dest_working_d
     char reverse_file_path[PATH_MAX + 1] = {};
 
     join_file_path(dest_working_dir, dir_entry->d_name, file_path);
-    reverse_string(reverse_file_name, dir_entry->d_name, NAME_MAX);
+    reverse_string(reverse_file_name, dir_entry->d_name, strlen(dir_entry->d_name));
     join_file_path(src_working_dir, reverse_file_name, reverse_file_path);
 
     if (dir_entry->d_type == DT_REG)
@@ -250,7 +250,7 @@ int create_reverse_file(const char *file_path, const char *reverse_file_path) {
             break;
         }
 
-        reverse_string(buffer, buffer, BUFFER_MAX);
+        reverse_string(buffer, buffer, count);
         ret = write_file(buffer, count, dest_file_stream);
         if (ret == ERROR) {
             perror(reverse_file_path);
