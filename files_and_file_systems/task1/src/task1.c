@@ -136,9 +136,9 @@ int process_dir_entry(const struct dirent *dir_entry, const char *dest_working_d
     reverse_string(reverse_file_name, dir_entry->d_name, strlen(dir_entry->d_name));
     join_file_path(src_working_dir, reverse_file_name, reverse_file_path);
 
-    if (dir_entry->d_type == DT_REG)
+    if (S_ISREG(dir_entry->d_type))
         ret = create_reverse_file(file_path, reverse_file_path);
-    else if (dir_entry->d_type == DT_DIR && strcmp(dir_entry->d_name, ".") != 0 && strcmp(dir_entry->d_name, "..") != 0)
+    else if (S_ISDIR(dir_entry->d_type) && strcmp(dir_entry->d_name, ".") != 0 && strcmp(dir_entry->d_name, "..") != 0)
         ret = create_reverse_dir(file_path, reverse_file_path);
 
     return ret;
