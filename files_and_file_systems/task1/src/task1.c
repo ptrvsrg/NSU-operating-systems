@@ -12,7 +12,7 @@ long max(long a, long b);
 void print_usage(const char *program_name);
 void reverse_string(char *dest, const char *src, int dest_length);
 void get_file_name(const char *file_path, char *file_name);
-void join_file_path(const char *working_dir, const char *file_name, char *file_path);
+int join_file_path(const char *working_dir, const char *file_name, char *file_path);
 int process_command_line_args(int argc, char **argv);
 int create_reverse_dir(const char *dir_path, const char *reverse_dir_path);
 int process_dir_entry(const struct dirent *dir_entry, const char *dest_working_dir, const char *src_working_dir);
@@ -71,8 +71,24 @@ void get_file_name(const char *file_path, char *file_name) {
         strncpy(file_name, last_slash + 1, NAME_MAX);
 }
 
-void join_file_path(const char *working_dir, const char *file_name, char *file_path) {
-    snprintf(file_path, PATH_MAX, "%s/%s", working_dir, file_name);
+int join_file_path(const char *working_dir, const char *file_name, char *file_path) {
+    int ret = SUCCESS;
+    size_t file_name_length = strlen(file_name);
+    size_t working_dir_length = strlen(working_dir);
+    size_t file_path_length = file_name_length + working_dir_length;
+
+    ret = snprintf(file_path, PATH_MAX, "%s/%s", working_dir, file_name);
+    if (ret < 0) {
+        perror("snprintf");
+        return ERROR;
+    }
+
+    if (ret != file_path_length + 1) {
+        fprintf(stderr, "snprintf: Path is not fully written");
+        return ERROR;
+    }
+
+    return SUCCESS;
 }
 
 int process_command_line_args(int argc, char **argv) {
@@ -84,7 +100,9 @@ int process_command_line_args(int argc, char **argv) {
     for (int i = 1; i < argc; ++i) {
         get_file_name(argv[i], dir_name);
         reverse_string(reverse_dir_name, dir_name, strlen(dir_name));
-        join_file_path(".", reverse_dir_name, reverse_dir_path);
+        ret = join_file_path(".", reverse_dir_name, reverse_dir_path);
+        if (ret == ERROR)
+            return ERROR;
 
         ret = create_reverse_dir(argv[i], reverse_dir_path);
         if (ret == ERROR)
@@ -132,13 +150,19 @@ int process_dir_entry(const struct dirent *dir_entry, const char *dest_working_d
     char reverse_file_name[NAME_MAX + 1] = {};
     char reverse_file_path[PATH_MAX + 1] = {};
 
-    join_file_path(dest_working_dir, dir_entry->d_name, file_path);
-    reverse_string(reverse_file_name, dir_entry->d_name, strlen(dir_entry->d_name));
-    join_file_path(src_working_dir, reverse_file_name, reverse_file_path);
+    ret = join_file_path(dest_working_dir, dir_entry->d_name, file_path);
+    if (ret == ERROR)
+        return ERROR;
 
-    if (S_ISREG(dir_entry->d_type))
+    reverse_string(reverse_file_name, dir_entry->d_name, strlen(dir_entry->d_name));
+
+    ret = join_file_path(src_working_dir, reverse_file_name, reverse_file_path);
+    if (ret == ERROR)
+        return ERROR;
+    
+    if (dir_entry->d_type == DT_REG)
         ret = create_reverse_file(file_path, reverse_file_path);
-    else if (S_ISDIR(dir_entry->d_type) && strcmp(dir_entry->d_name, ".") != 0 && strcmp(dir_entry->d_name, "..") != 0)
+    else if (dir_entry->d_type == DT_DIR && strcmp(dir_entry->d_name, ".") != 0 && strcmp(dir_entry->d_name, "..") != 0)
         ret = create_reverse_dir(file_path, reverse_file_path);
 
     return ret;
