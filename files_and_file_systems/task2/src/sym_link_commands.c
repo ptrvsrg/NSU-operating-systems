@@ -1,6 +1,7 @@
 #include "commands.h"
 #include <dirent.h>
 #include <stdio.h>
+#include <sys/stat.h>
 #include <unistd.h>
 
 int create_sym_link(int argc, char **argv) {
@@ -73,6 +74,20 @@ int remove_sym_link(int argc, char **argv) {
     }
 
     int ret = SUCCESS;
+    char *link_path = argv[0];
+    struct stat file_info;
+
+    ret = stat(link_path, &file_info);
+    if (ret == ERROR) {
+        perror(link_path);
+        return ERROR;
+    }
+
+    if (file_info.st_mode != S_IFLNK) {
+        fprintf(stderr, "%s: file is not symbolic link\n", link_path);
+        return ERROR;
+    }
+
     ret = remove_hard_link(argc, argv);
     return ret;
 }
