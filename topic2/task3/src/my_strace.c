@@ -1,3 +1,4 @@
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/ptrace.h>
@@ -5,7 +6,6 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-#define CHILD_PROCESS 0
 #define SUCCESS 0
 #define ERROR (-1)
 
@@ -29,13 +29,15 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
     }
 
-    if (child_pid == CHILD_PROCESS)
+    if (child_pid == 0) {
         ret = execute_child_program(child_program_name, child_argv);
-    else
+    } else {
         ret = print_child_syscalls(child_pid);
+    }
 
-    if (ret == ERROR)
+    if (ret == ERROR) {
         return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }
@@ -63,13 +65,17 @@ int print_child_syscalls(pid_t child_pid) {
     int ret = SUCCESS;
     struct user_regs_struct regs = {};
 
-    ret = waitpid(child_pid, &status, WSTOPPED);
-    if (ret == ERROR) {
-        perror("waitpid");
-        return ERROR;
-    }
+    while (true) {
+        ret = waitpid(child_pid, &status, WSTOPPED);
+        if (ret == ERROR) {
+            perror("waitpid");
+            return ERROR;
+        }
 
-    while (WIFSTOPPED(status)) {
+        if (!WIFSTOPPED(status)) {
+            break;
+        }
+
         ret = ptrace(PT_GETREGS, child_pid, NULL, &regs);
         if (ret == ERROR) {
             perror("ptrace : PT_GETREGS");
@@ -81,12 +87,6 @@ int print_child_syscalls(pid_t child_pid) {
         ret = ptrace(PT_SYSCALL, child_pid, NULL, NULL);
         if (ret == ERROR) {
             perror("ptrace : PT_SYSCALL");
-            return ERROR;
-        }
-
-        ret = waitpid(child_pid, &status, WSTOPPED);
-        if (ret == ERROR) {
-            perror("waitpid");
             return ERROR;
         }
     }
