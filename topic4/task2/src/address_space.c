@@ -6,6 +6,7 @@
 #define SUCCESS 0
 #define ERROR (-1)
 #define PAGE_SIZE 4096
+#define NO_FD (-1)
 
 void allocate_on_stack();
 void allocate_on_heap();
@@ -50,7 +51,7 @@ void allocate_address_region() {
     int ret = SUCCESS;
     char *addr_region;
 
-    addr_region = mmap(NULL, 10 * PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    addr_region = mmap(NULL, 10 * PAGE_SIZE, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, NO_FD, 0);
     if (addr_region == MAP_FAILED) {
         perror("mmap");
         exit(EXIT_FAILURE);
