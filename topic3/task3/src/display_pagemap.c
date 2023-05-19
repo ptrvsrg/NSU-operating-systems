@@ -123,9 +123,7 @@ int print_pagemap_entries(int pagemap_fd, uint64_t start_addr, uint64_t end_addr
             return ERROR;
         }
 
-        if (pagemap_entry & PAGE_PRESENT) {
-            printf("%llx -> %llx\n", addr, pagemap_entry & PFN_MASK);
-        }
+        printf("0x%lx -> 0x%lx\n", addr, pagemap_entry & PFN_MASK);
     }
 
     return SUCCESS;
