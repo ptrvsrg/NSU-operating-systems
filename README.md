@@ -1,48 +1,48 @@
 В данном репозитории лежат лабораторные работы по дисциплине "Операционные системы" 4 семестра ФИТ НГУ.
 
-+ [Компиляция, сборка, линковка](topic1)
++ [Компиляция, сборка, линковка](./compiling-building-running/)
 
-  + [Исполняемый файл](topic1/task1)
-  + [Статическая библиотека](topic1/task2)
-  + [Динамическая библиотека (загрузка при создании процесса)](topic1/task3)
-  + [Динамическая библиотека (загрузка при выполнении программы)](topic1/task4)
+  + [Исполняемый файл](./compiling-building-running/executable/)
+  + [Статическая библиотека](./compiling-building-running/static-library/)
+  + [Динамическая библиотека (загрузка при создании процесса)](./compiling-building-running/dynamic-library/)
+  + [Динамическая библиотека (загрузка при выполнении программы)](./compiling-building-running/dynamic-library-runtime/)
 
-+ [Системные вызовы](topic2)
++ [Системные вызовы](./system-calls/)
 
-  + [Системный вызов `write` и обёртка над ним, статистика системных вызовов](topic2/task1)
-  + [Инструкция `syscall`](topic2/task2)
-  + [Печать системных вызовов](topic2/task3)
+  + [Системный вызов `write` и обёртка над ним, статистика системных вызовов](./system-calls/write-syscall/)
+  + [Инструкция `syscall`](./system-calls/syscall-instruction/)
+  + [Печать системных вызовов](./system-calls/strace/)
 
-+ [Файлы и файловые системы](topic3)
++ [Файлы и файловые системы](./files-and-file-systems/)
 
-  + [Копирование задом наперёд](topic3/task1)
-  + [Создание, чтение, изменение прав доступа и удаление файлов, каталогов, символьных и жестких ссылок](topic3/task2)
-  + [Печать `/proc/<pid>/pagemap`](topic3/task3)
+  + [Копирование задом наперёд](./files-and-file-systems/reverse-directory/)
+  + [Создание, чтение, изменение прав доступа и удаление файлов, каталогов, символьных и жестких ссылок](./files-and-file-systems/commands-for-files/)
+  + [Печать `/proc/<pid>/pagemap`](./files-and-file-systems/print-pagemap/)
 
-+ [Адресное пространство процесса](topic4)
++ [Адресное пространство процесса](./process-address-space/)
 
-  + [Структура адресного пространства](topic4/task1)
-  + [Управление адресным пространством](topic4/task2)
-  + [Самодельная куча](topic4/task3)
+  + [Структура адресного пространства](./process-address-space/address-space-structure/)
+  + [Управление адресным пространством](./process-address-space/adress-space-management/)
+  + [Самодельная куча](./process-address-space/heap/)
 
-+ [Создание, завершение процесса](topic5)
++ [Создание, завершение процесса](./process-creation-and-termination/)
 
-  + [Жизненный цикл процесса](topic5/task1)
-  + [Процесс в состоянии зомби](topic5/task2)
-  + [Создание процесса при помощи системного вызова `clone(2)`](topic5/task3)
+  + [Жизненный цикл процесса](./process-creation-and-termination/process-life-cycle/)
+  + [Процесс в состоянии зомби](./process-creation-and-termination/zombie-process/)
+  + [Создание процесса при помощи системного вызова `clone(2)`](./process-creation-and-termination/clone-system-call/)
 
-+ [Межпроцессное взаимодействие](topic6)
++ [Межпроцессное взаимодействие](./inter-process-communication/)
 
-  + [Взаимодействие процессов через разделяемую память](topic6/task1)
-  + [Взаимодействие процессов через `pipe`](topic6/task2)
-  + [Взаимодействие через доменные сокеты](topic6/task3)
+  + [Взаимодействие процессов через разделяемую память](./inter-process-communication/shared-memory/)
+  + [Взаимодействие процессов через `pipe`](./inter-process-communication/pipe/)
+  + [Взаимодействие через доменные сокеты](./inter-process-communication/domain-socket/)
 
-+ [Сеть](topic7)
++ [Сеть](./network/)
 
-  + [UDP - эхо сервер](topic7/task1)
-  + [TCP - эхо сервер](topic7/task2)
-  + [ТСP - эхо сервер №2](topic7/task3)
+  + [UDP - эхо сервер](./network/udp-echo-server/)
+  + [TCP - эхо сервер](./network/tcp-echo-server-1/)
+  + [ТСP - эхо сервер №2](./network/tcp-echo-server-2/)
 
-+ [Понятие пользователя. Управление правами](topic8)
++ [Понятие пользователя. Управление правами](./users-and-rights-management/)
 
-  + [Использование SUID-бита для доступа к файлам](topic8/task1)
+  + [Использование SUID-бита для доступа к файлам](./users-and-rights-management/%20suid-bit-for-file-access/)

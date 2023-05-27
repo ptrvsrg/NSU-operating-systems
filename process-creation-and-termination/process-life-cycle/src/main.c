@@ -34,7 +34,7 @@ int main() {
         printf("child global_var:   %p %d\n", &global_var, global_var);
         printf("child local_var:    %p %d\n", &local_var, local_var);
 
-        return 5;
+        exit(5);
     }
 
     sleep(1);
