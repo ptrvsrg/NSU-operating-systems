@@ -8,16 +8,30 @@
 
 #define ERROR           (-1)
 #define BUFFER_SIZE     1024
-#define SERVER_PORT     5000
-
-const char *SERVER_IP = "127.0.0.1";
 
 int main(int argc, char **argv) {
     int ret;
     int client_sock;
+    int server_port;
+    char *server_ip;
+    char *server_port_str;
     char buffer[BUFFER_SIZE] = {};
     socklen_t sock_addr_length = sizeof(struct sockaddr_in);
     struct sockaddr_in server_sock_addr;
+
+    // Get server settings
+    server_ip = getenv("SERVER_IP");
+    if (server_ip == NULL) {
+        fprintf(stderr, "getenv : set environment variable SERVER_IP\n");
+        return EXIT_FAILURE;
+    }
+
+    server_port_str = getenv("SERVER_PORT");
+    if (server_port_str == NULL) {
+        fprintf(stderr, "getenv : set environment variable SERVER_PORT\n");
+        return EXIT_FAILURE;
+    }
+    server_port = atoi(server_port_str);
 
     // Create client socket
     client_sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
@@ -29,16 +43,18 @@ int main(int argc, char **argv) {
 
     // Initialize server address
     server_sock_addr.sin_family = AF_INET;
-    server_sock_addr.sin_port = SERVER_PORT;
-    ret = inet_pton(AF_INET, SERVER_IP, &(server_sock_addr.sin_addr));
+    server_sock_addr.sin_port = server_port;
+    ret = inet_pton(AF_INET, server_ip, &(server_sock_addr.sin_addr));
     if (ret == ERROR) {
         perror("inet_pton");
         close(client_sock);
         return EXIT_FAILURE;
     }
 
+    // Start communication
     while (true) {
         printf("Enter message: ");
+        memset(buffer, 0, BUFFER_SIZE);
         fgets(buffer, BUFFER_SIZE, stdin);
         if (buffer[strlen(buffer) - 1] == '\n') {
             buffer[strlen(buffer) - 1] = '\0';
@@ -61,6 +77,5 @@ int main(int argc, char **argv) {
     }
 
     close(client_sock);
-
     return EXIT_SUCCESS;
 }
