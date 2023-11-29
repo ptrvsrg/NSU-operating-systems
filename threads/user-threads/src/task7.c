@@ -135,10 +135,6 @@ void* routine3(void* arg) {
 int main() {
     printf("%s: pid %d\n", __func__, getpid());
 
-    sigset_t mask;
-    sigfillset(&mask);
-    sigprocmask(SIG_SETMASK, &mask, NULL);
-
     struct user_thread_t user_thread1, user_thread2, user_thread3;
 
     int err = user_thread_create(&user_thread1, routine1, "Thread 0");
